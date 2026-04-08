@@ -29,6 +29,7 @@ Each step should be a **vertical slice** — delivering testable end-to-end func
 - New domains + their UI together when feasible; if the domain is too large, split by capability (e.g. CRUD first, then event-sourcing, then the assembly endpoint)
 - Interaction layers (drag-and-drop, command menu) after rendering is solid
 - Event history / audit features last
+- **Wire new external calls early with raw/diagnostic output.** When a step introduces a new API call or external dependency, structure it so the command is wired end-to-end first and prints raw data — before any logic or rendering is built on top. This lets the user verify the data shape is correct early. Subsequent steps layer logic and final output on top of confirmed-working data.
 
 **Sizing guidelines:**
 - **Default to small.** Each step should deliver exactly one observable thing — something the user can see or interact with immediately after the commit. If you can't describe what's visible after the step in one sentence, it's too large.

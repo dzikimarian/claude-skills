@@ -25,6 +25,7 @@ If you discover inconsistencies or potential issues discuss with the user before
 
 Make the changes. Follow the project's existing conventions exactly — same patterns, same file structure, same naming style.
 
+
 ## 4. Run tests
 
 Always run tests after implementation. Work is not done until all tests pass:
