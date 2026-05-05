@@ -25,11 +25,21 @@ Each step should be a **vertical slice** — delivering testable end-to-end func
 
 **Ordering principles:**
 - Small domain extensions to existing code first (quick wins, unblock later steps)
-- UI scaffolding (navigation, empty shells) early so subsequent steps have a home
+- UI scaffolding (navigation, empty shells) early so subsequent steps have a home; **the navigation shell is its own step** — it wraps all screens and is independent of any single screen's feature, so never bundle it with the first real screen it naturally rides alongside
 - New domains + their UI together when feasible; if the domain is too large, split by capability (e.g. CRUD first, then event-sourcing, then the assembly endpoint)
 - Interaction layers (drag-and-drop, command menu) after rendering is solid
 - Event history / audit features last
 - **Wire new external calls early with raw/diagnostic output.** When a step introduces a new API call or external dependency, structure it so the command is wired end-to-end first and prints raw data — before any logic or rendering is built on top. This lets the user verify the data shape is correct early. Subsequent steps layer logic and final output on top of confirmed-working data.
+
+**Navigation patterns — resolve ambiguity in the plan:**
+
+When the spec says a screen or panel is "accessible from X" without specifying the mechanism, make the design decision explicitly in the plan and document it — don't leave it for the implementer to guess. Common options: bottom nav bar, top app bar icons, FAB, swipe gesture, modal overlay.
+
+For each navigation entry point, determine whether it is a **nav destination** or a **modal overlay**:
+- **Nav destination** (bottom nav tab, top-level route): the user leaves the current screen; state of the previous screen is suspended
+- **Modal overlay** (bottom sheet, dialog): the user stays in context; both the overlay and the underlying screen are active simultaneously
+
+Use a modal overlay when the panel needs **co-existence** with its parent — i.e. the user acts on both simultaneously (e.g. a marks panel where tapping a mark seeks the player beneath it). The navigation shell step should explicitly call out what is *not* a nav tab and why, so implementers don't accidentally promote it to a route.
 
 **Sizing guidelines:**
 - **Default to small.** Each step should deliver exactly one observable thing — something the user can see or interact with immediately after the commit. If you can't describe what's visible after the step in one sentence, it's too large.
